@@ -11,9 +11,7 @@ def get_theta_rms(reading: float, freq: int) -> int: #works only for range = 2V
         return (0.2 * reading + 0.05 * range)/100
     if freq < 50 * 1000:
         return (1 * reading + 0.05 * range)/100
-    if freq < 100 * 1000:
-        return (3 * reading + 0.05 * range)/100
-    return -1
+    return (3 * reading + 0.05 * range)/100
 
 def get_theta(reading: float) -> float:
     range = 2
