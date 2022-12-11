@@ -3,7 +3,7 @@ import math as m
 from round import double_round #self-written function for rounding U/delta and X_mean
 
 
-def get_theta_rms(reading: float, freq: int) -> int: #works only for range = 2V
+def get_theta_rms(reading: float, freq: int = 1000) -> float: #works only for range = 2V
     range = 2 
     if freq < 45:
         return (1.5 * reading + 0.1 * range)/100
@@ -21,23 +21,24 @@ def get_theta_osc(reading: float, div: int) -> float:
     return 0.03*reading + (0.1*div + 1)/1000
 
 
-filename = "СМ5-31Б_ЛР7_Поседкин_НМ_Паламарчук_АД.xlsx"
+filename = "СМ5-31Б_ЛР8_Поседкин_НМ_Паламарчук_АД.xlsx"
 #Reading document
 try:
     data = pd.read_excel(filename, header=1, index_col=0)
+    print(data)
 except:
     print("file not found")
     exit(0)
 
 P = 0.95
-n = 36
+n = 21
 
 
-file = open("resultsLR7.txt", "w")
+file = open("resultsLR8.txt", "w")
 
 #j={current[j]}
 
-Results = {'frequency': [(10 ** 0.2) ** i for i in range(36)]} # new template dataframe purposed to export data to excel file
+Results = {'k, %': [i*5 for i in range(21)]} # new template dataframe purposed to export data to excel file
 
 #print(Results)
 
@@ -59,7 +60,7 @@ for i in data:
         file.write(current.name + '\n')
         Results.update([(current.name+' X', []), (current.name+' U', [])])
         for j in range(1, n + 1):
-            theta = get_theta_rms(current[j], data['f, Гц'][j])
+            theta = get_theta_rms(current[j])
             U = theta / m.sqrt(3)
             Results[current.name+' U'].append(U)
             Results[current.name+' X'].append(current[j])
@@ -109,9 +110,10 @@ for i in data:
 file.close()
     
 # exporting table into .xlsx file
+print([len(i) for i in Results.values()])
 print(Results)
 
-pd.DataFrame(Results).to_excel("output7.xlsx")
+pd.DataFrame(Results).to_excel("output8.xlsx")
 
 
 
